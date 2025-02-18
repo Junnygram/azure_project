@@ -27,8 +27,12 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
     go: 'bg-cyan-700 hover:bg-blue-600',
   };
 
-  const bgColor = backgroundColors[backendName as keyof typeof backgroundColors] || 'bg-gray-200';
-  const btnColor = buttonColors[backendName as keyof typeof buttonColors] || 'bg-gray-500 hover:bg-gray-600';
+  const bgColor =
+    backgroundColors[backendName as keyof typeof backgroundColors] ||
+    'bg-gray-200';
+  const btnColor =
+    buttonColors[backendName as keyof typeof buttonColors] ||
+    'bg-gray-500 hover:bg-gray-600';
 
   // Fetch all users
   useEffect(() => {
@@ -49,7 +53,12 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${apiUrl}/api/${backendName}/users`, newUser);
+      const response = await axios.post(
+        `${apiUrl}/api/${backendName}/users`,
+        newUser
+      );
+
+      // console.log(response?.data);
       setUsers([response.data, ...users]);
       setNewUser({ name: '', email: '' });
     } catch (error) {
@@ -61,7 +70,10 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
   const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.put(`${apiUrl}/api/${backendName}/users/${updateUser.id}`, { name: updateUser.name, email: updateUser.email });
+      await axios.put(`${apiUrl}/api/${backendName}/users/${updateUser.id}`, {
+        name: updateUser.name,
+        email: updateUser.email,
+      });
       setUpdateUser({ id: '', name: '', email: '' });
       setUsers(
         users.map((user) => {
@@ -84,15 +96,26 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
     } catch (error) {
       console.error('Error deleting user:', error);
     }
-  }
+  };
 
   return (
-    <div className={`user-interface ${bgColor} ${backendName} w-full max-w-md p-4 my-4 rounded shadow`}>
-      <img src={`/${backendName}logo.svg`} alt={`${backendName} Logo`} className="w-20 h-20 mb-6 mx-auto" />
-      <h2 className="text-xl font-bold text-center text-white mb-6">{`${backendName.charAt(0).toUpperCase() + backendName.slice(1)} Backend`}</h2>
+    <div
+      className={`user-interface ${bgColor} ${backendName} w-full max-w-md p-4 my-4 rounded shadow`}
+    >
+      <img
+        src={`/${backendName}logo.svg`}
+        alt={`${backendName} Logo`}
+        className="w-20 h-20 mb-6 mx-auto"
+      />
+      <h2 className="text-xl font-bold text-center text-white mb-6">{`${
+        backendName.charAt(0).toUpperCase() + backendName.slice(1)
+      } Backend`}</h2>
 
       {/* Create user */}
-      <form onSubmit={createUser} className="mb-6 p-4 bg-blue-100 rounded shadow">
+      <form
+        onSubmit={createUser}
+        className="mb-6 p-4 bg-blue-100 rounded shadow"
+      >
         <input
           placeholder="Name"
           value={newUser.name}
@@ -105,14 +128,21 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
           onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
           className="mb-2 w-full p-2 border border-gray-300 rounded"
         />
-        <button type="submit" className="w-full p-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+        <button
+          disabled={!newUser.name || !newUser.email.includes('@')}
+          type="submit"
+          className="w-full p-2 text-white bg-blue-500 rounded hover:bg-blue-600 disabled:bg-gray-500 "
+        >
           Add User
         </button>
       </form>
 
       {/* Update user */}
-      <form onSubmit={handleUpdateUser} className="mb-6 p-4 bg-blue-100 rounded shadow">
-      <input
+      <form
+        onSubmit={handleUpdateUser}
+        className="mb-6 p-4 bg-blue-100 rounded shadow"
+      >
+        <input
           placeholder="User Id"
           value={updateUser.id}
           onChange={(e) => setUpdateUser({ ...updateUser, id: e.target.value })}
@@ -121,16 +151,24 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
         <input
           placeholder="New Name"
           value={updateUser.name}
-          onChange={(e) => setUpdateUser({ ...updateUser, name: e.target.value })}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, name: e.target.value })
+          }
           className="mb-2 w-full p-2 border border-gray-300 rounded"
         />
         <input
           placeholder="New Email"
           value={updateUser.email}
-          onChange={(e) => setUpdateUser({ ...updateUser, email: e.target.value })}
+          onChange={(e) =>
+            setUpdateUser({ ...updateUser, email: e.target.value })
+          }
           className="mb-2 w-full p-2 border border-gray-300 rounded"
         />
-        <button type="submit" className="w-full p-2 text-white bg-green-500 rounded hover:bg-green-600">
+        <button
+          disabled={!updateUser.id || !updateUser.name || !updateUser.email}
+          type="submit"
+          className="w-full p-2 text-white bg-green-500 rounded hover:bg-green-600  disabled:bg-gray-500"
+        >
           Update User
         </button>
       </form>
@@ -138,9 +176,15 @@ const UserInterface: React.FC<UserInterfaceProps> = ({ backendName }) => {
       {/* display users */}
       <div className="space-y-4">
         {users.map((user) => (
-          <div key={user.id} className="flex items-center justify-between bg-white p-4 rounded-lg shadow">
+          <div
+            key={user.id}
+            className="flex items-center justify-between bg-white p-4 rounded-lg shadow"
+          >
             <CardComponent card={user} />
-            <button onClick={() => deleteUser(user.id)} className={`${btnColor} text-white py-2 px-4 rounded`}>
+            <button
+              onClick={() => deleteUser(user.id)}
+              className={`${btnColor} text-white p-4 text-sm rounded`}
+            >
               Delete User
             </button>
           </div>

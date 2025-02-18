@@ -1,13 +1,14 @@
-FROM golang:1.16.3-alpine3.13
+
+FROM golang:1.21-alpine
 
 WORKDIR /app
 
 COPY . .
 
-# Download and install the dependencies:
-RUN go get -d -v ./...
+# Download and install the dependencies
+RUN go mod tidy
 
-# Build the go app
+# Build the Go app
 RUN go build -o api .
 
 EXPOSE 8000
